@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+@font-face {
+  font-family: "HelveticaNeue";
+  src: url("./assets/fonts/HelveticaNeueRoman.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  font-family: "HelveticaNeue", sans-serif;
+}
