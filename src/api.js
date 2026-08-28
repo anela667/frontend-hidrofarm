@@ -23,12 +23,6 @@ export function logout() {
   localStorage.removeItem("user");
 }
 
-// Backend mengirim tanggal (kolom DATE seperti started_at) sebagai string
-// ISO datetime UTC penuh (mis. "2026-08-18T17:00:00.000Z"), akibat konversi
-// timezone otomatis JavaScript saat serialisasi JSON -- tanggal aslinya di
-// database cuma "2026-08-19" tanpa jam. formatTanggal() balikin ke tanggal
-// lokal yang benar (pakai method lokal, BUKAN getUTCDate/dst, supaya
-// tanggalnya gak kegeser mundur 1 hari lagi).
 export function formatTanggal(rawDate) {
   if (!rawDate) return "-";
   const d = new Date(rawDate);
