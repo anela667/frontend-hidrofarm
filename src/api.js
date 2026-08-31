@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const VITE_API_URL= "https://api.start-hidrofarm.site";
 
 export function saveSession(token, user) {
   localStorage.setItem("token", token);
@@ -45,8 +45,7 @@ async function request(path, options = {}) {
   if (token) headers["Authorization"] = token;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 detik
-
+  const timeoutId = setTimeout(() => controller.abort(), 1000); 
   let response;
   try {
     response = await fetch(`${API_URL}${path}`, {
