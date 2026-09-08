@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import logo from "/Logo-h.png";
+import logo from "/logo-h.png";
 import { logout } from "./api";
 
 const MENU = [
