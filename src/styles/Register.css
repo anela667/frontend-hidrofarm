@@ -1,0 +1,45 @@
+.Register-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #6ea7a1, #bfe5e0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Register-card {
+  width: 400px;
+  color: white;
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+.Register-card h3 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.Register-card input {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: white;
+}
+
+.Register-card input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.Register-card button {
+  background-color: #5f8f8b;
+  border: none;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

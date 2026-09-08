@@ -1,0 +1,72 @@
+@font-face {
+  font-family: HelveticaNeueRoman;
+  src: url('assets/fonts/HelveticaNeueRoman.otf');
+}
+
+* {
+  font-family: HelveticaNeueRoman;
+}
+
+.fc .fc-button-primary{
+  background-color: transparent;
+  border: none;
+  color: black;
+}
+
+.fc .fc-button-primary:hover{
+  background-color: transparent;
+  border: none;
+  color: black;
+}
+
+.fc-prev-button:active{
+  background-color: transparent ! important;
+  color: black ! important;
+}
+
+.fc-next-button:active{
+  background-color: transparent ! important;
+  color: black ! important;
+}
+
+.fc .fc-today-button{
+  display: none;
+}
+
+.fc-daygrid-day-top{
+  display: flex;
+  justify-content: start;
+}
+
+.fc-daygrid-day-number{
+  font-size: .85rem;
+  margin: .25rem;
+  opacity: 70%;
+  color: #17181D;
+}
+
+.fc-day-today .fc-daygrid-day-number{
+  background-color: #74B49B;
+  border-radius: 100%;
+  width: 1.65rem;
+  height: 1.65rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin: .25rem;
+}
+
+.fc .fc-daygrid-day.fc-day-today{
+  background-color: rgba(116, 180, 155, .1);
+}
+
+.fc-toolbar-title{
+  color: rgba(0, 0, 0, .6);
+  font-size: 1.4rem ! important;
+  margin-right: 1em ! important;
+}
+
+.fc-col-header {
+  color: rgba(0, 0, 0, .6);
+}

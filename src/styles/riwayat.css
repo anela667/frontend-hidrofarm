@@ -1,0 +1,130 @@
+/* Background utama */
+.notes-wrapper {
+  background: linear-gradient(180deg, #eef3f1 0%, #dfe8e5 100%);
+  min-height: 100vh;
+  padding: 40px 60px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Welcome text */
+.welcome-text {
+  margin-bottom: 25px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Card Riwayat */
+.riwayat-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Header riwayat */
+.riwayat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  font-weight: 500;
+  color: #444;
+}
+
+/* Tombol + */
+.btn-add {
+  background-color: #6fa89a;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-add:hover {
+  background-color: #5a8f82;
+}
+
+/* Table */
+.riwayat-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.riwayat-table thead {
+  background-color: #d6d8d7;
+}
+
+.riwayat-table th {
+  padding: 10px;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.riwayat-table td {
+  padding: 15px;
+  color: #777;
+}
+
+.empty-text {
+  padding: 25px;
+  color: #999;
+}
+
+/* HASIL SECTION */
+.hasil-wrapper {
+  display: flex;
+  gap: 30px;
+  margin-top: 35px;
+}
+
+/* Card hasil */
+.hasil-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+/* Badge berhasil */
+.badge-berhasil {
+  background-color: #6fa89a;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* Badge gagal */
+.badge-gagal {
+  background-color: #ff4d1f;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* Persentase */
+.persen-berhasil {
+  font-size: 48px;
+  color: #6fa89a;
+  font-weight: 500;
+}
+
+.persen-gagal {
+  font-size: 48px;
+  color: #ff4d1f;
+  font-weight: 500;
+}
