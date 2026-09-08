@@ -1,5 +1,5 @@
 // Sesuaikan kalau port/URL backend kamu berbeda (lihat PORT di be-hidrofarm/.env)
-export const API_URL = "http://localhost:5000";
+export const API_URL = "https://api.start-hidrofarm.site";
 
 export function saveSession(token, user) {
   localStorage.setItem("token", token);
