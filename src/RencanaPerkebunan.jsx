@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser, plantApi, planApi } from "./api";
-import { METHOD_OPTIONS, getMaterialsInfo } from "./hydroponicPlanning";
+import { METHOD_OPTIONS, getMaterialsInfo, getMethodWarning } from "./hydroponicPlanning";
 
 export default function RencanaPerkebunan() {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ export default function RencanaPerkebunan() {
     }
 
     if (Number(area) <= 0) {
-      setError("Luas lahan harus lebih besar dari 0.");
+      setError("Luas lahan harus lebih dari 0.");
       return;
     }
 
@@ -52,12 +52,12 @@ export default function RencanaPerkebunan() {
     setSaving(true);
     try {
       const res = await planApi.create(user.id, idPlant, method, Number(area));
-      // Pass the newly-created plan through navigation state, so the Farm
-      // page can show it right away without waiting for a re-fetch.
+      // Kirim plan yang baru dibuat lewat navigation state, supaya
+      // halaman Farm bisa langsung menampilkannya tanpa perlu fetch ulang.
       navigate("/Farm", { state: { newPlan: res.data } });
       return;
     } catch (err) {
-      setError(err.message || "Gagal menyimpan rencana penanaman.");
+      setError(err.message || "Gagal menyimpan rencana tanam.");
     } finally {
       setSaving(false);
     }
@@ -66,6 +66,9 @@ export default function RencanaPerkebunan() {
   const selectedPlant = plants.find((p) => p.id === idPlant);
   const materials = selectedPlant
     ? getMaterialsInfo(method, area, selectedPlant.name)
+    : null;
+  const methodWarning = selectedPlant
+    ? getMethodWarning(selectedPlant.name, method)
     : null;
 
   const handleBack = () => {
@@ -79,7 +82,7 @@ export default function RencanaPerkebunan() {
   return (
     <div className="min-h-screen bg-[#eef3f1] flex items-start justify-center p-10">
 
-      {/* BACK BUTTON */}
+      {/* TOMBOL KEMBALI */}
       <button
         onClick={handleBack}
         className="fixed top-8 left-8 w-12 h-12 rounded-2xl bg-[#6d9b91] hover:bg-[#5f8f87] text-white flex items-center justify-center text-xl shadow transition"
@@ -87,11 +90,11 @@ export default function RencanaPerkebunan() {
         ←
       </button>
 
-      {/* CARD */}
+      {/* KARTU */}
       <div className="bg-white rounded-3xl shadow-lg w-full max-w-[440px] p-8 mt-6">
 
         <h1 className="text-2xl font-semibold text-[#2f2f2f] mb-6">
-          Rencana Penanaman
+          Rencana Tanam
         </h1>
 
         {error && (
@@ -102,13 +105,13 @@ export default function RencanaPerkebunan() {
 
         {step === "form" ? (
           <>
-            {/* PLANT TYPE */}
+            {/* JENIS TANAMAN */}
             <div className="mb-6">
               <p className="text-[#333] font-medium mb-1">
                 Jenis Tanaman<span className="text-orange-400">*</span>
               </p>
               <p className="text-[#999] text-xs mb-3">
-                Pilih satu jenis tanaman yang ingin kamu tanam.
+                Pilih satu jenis tanaman yang ingin Anda tanam.
               </p>
 
               {loading ? (
@@ -138,7 +141,7 @@ export default function RencanaPerkebunan() {
               )}
             </div>
 
-            {/* HYDROPONIC METHOD */}
+            {/* METODE HIDROPONIK */}
             <div className="mb-6">
               <p className="text-[#333] font-medium mb-2">
                 Metode Hidroponik<span className="text-orange-400">*</span>
@@ -148,16 +151,22 @@ export default function RencanaPerkebunan() {
                 onChange={(e) => setMethod(e.target.value)}
                 className="w-full border border-[#cfe3dc] bg-[#f4faf8] p-3 rounded-xl outline-none text-[#444]"
               >
-                <option value="">Pilih metode penanaman</option>
+                <option value="">Pilih metode tanam</option>
                 {METHOD_OPTIONS.map((m) => (
                   <option key={m} value={m}>
                     {m}
                   </option>
                 ))}
               </select>
+
+              {methodWarning && (
+                <p className="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                  ⚠️ {methodWarning}
+                </p>
+              )}
             </div>
 
-            {/* LAND AREA */}
+            {/* LUAS LAHAN */}
             <div className="mb-8">
               <p className="text-[#333] font-medium mb-2">
                 Luas Lahan yang Digunakan (m²)<span className="text-orange-400">*</span>
@@ -166,32 +175,32 @@ export default function RencanaPerkebunan() {
                 type="number"
                 min="0.1"
                 step="0.1"
-                placeholder="contoh: 2.5"
+                placeholder="mis. 2.5"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
                 className="w-full border border-[#cfe3dc] bg-[#f4faf8] p-3 rounded-xl outline-none text-[#444]"
               />
               <p className="text-[#999] text-xs mt-2">
-                Jumlah tanaman dan bahan yang dibutuhkan akan diperkirakan berdasarkan luas ini.
+                Jumlah tanaman dan bahan yang dibutuhkan akan diperkirakan dari luas lahan ini.
               </p>
             </div>
 
-            {/* SUBMIT */}
+            {/* LANJUT */}
             <div className="flex justify-center">
               <button
                 onClick={goToInfo}
                 className="bg-[#5f8f87] hover:bg-[#537d76] text-white px-10 py-3 rounded-2xl font-medium shadow transition"
               >
-                Lanjutkan
+                Lanjut
               </button>
             </div>
           </>
         ) : (
           <>
-            {/* MATERIALS INFO */}
+            {/* INFO BAHAN */}
             <div className="mb-6">
               <p className="text-[#333] font-medium mb-1">
-                {materials?.title || "Apa yang perlu kamu siapkan?"}
+                {materials?.title || "Apa saja yang perlu disiapkan?"}
               </p>
               <p className="text-[#999] text-xs mb-4">
                 {materials?.summary}
@@ -217,9 +226,15 @@ export default function RencanaPerkebunan() {
                   {materials?.layoutNote}
                 </p>
               </div>
+
+              {methodWarning && (
+                <p className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                  ⚠️ {methodWarning}
+                </p>
+              )}
             </div>
 
-            {/* SUBMIT */}
+            {/* SIMPAN */}
             <div className="flex justify-center">
               <button
                 onClick={startPlanting}
@@ -236,3 +251,4 @@ export default function RencanaPerkebunan() {
     </div>
   );
 }
+
