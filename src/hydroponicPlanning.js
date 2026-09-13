@@ -1,9 +1,3 @@
-// Shared hydroponic planning helpers used by the planting form.
-// NOTE: the plant-count estimate here must stay in sync with
-// `PLANT_DENSITY_PER_M2` in the backend (controller/farm/plan.js), since
-// the backend recalculates and stores the authoritative value — this
-// version is only used to preview the estimate before submitting.
-
 export const METHOD_OPTIONS = ["NFT", "Wick System"];
 
 const PLANT_DENSITY_PER_M2 = {
@@ -17,33 +11,54 @@ export function estimatePlantCount(method, area) {
   return Math.max(Math.round(numericArea * density), 0);
 }
 
-// Plants with a heavier/bushier growth habit need wider pipes and more
-// support, so the recommended PVC ("paralon") diameter differs by plant.
 const HEAVY_FRUITING_PLANTS = ["Tomat Ceri"];
 
 function recommendPipeDiameter(plantName) {
   return HEAVY_FRUITING_PLANTS.includes(plantName) ? "4 inch (10 cm)" : "3 inch (7.5 cm)";
 }
 
-// Small area = save floor space with a tiered (vertical) rack.
-// Larger area = a flat, single-level layout is simpler to install and maintain.
+const METHOD_RECOMMENDATION = {
+  Sawi: {
+    recommended: ["NFT", "Wick System"],
+    reason:
+      "Sawi adalah sayuran daun yang ringan dengan akar dangkal dan kebutuhan nutrisi rendah, jadi cocok tumbuh dengan kedua metode.",
+  },
+  Selada: {
+    recommended: ["NFT", "Wick System"],
+    reason:
+      "Selada adalah sayuran daun yang ringan dengan akar dangkal dan kebutuhan nutrisi rendah, jadi cocok tumbuh dengan kedua metode.",
+  },
+  "Tomat Ceri": {
+    recommended: ["NFT"],
+    reason:
+      "Tomat ceri adalah tanaman buah yang berat dan butuh banyak nutrisi serta air saat mulai berbuah. Wick System (sistem sumbu pasif) berisiko tidak mampu mengimbangi kebutuhan itu seiring tanaman tumbuh besar, jadi NFT (aliran nutrisi aktif) lebih disarankan.",
+  },
+};
+
+export function getMethodWarning(plantName, method) {
+  if (!plantName || !method) return null;
+
+  const info = METHOD_RECOMMENDATION[plantName];
+  if (!info || info.recommended.includes(method)) return null;
+
+  return `Untuk tanaman ${plantName}, metode yang disarankan adalah ${info.recommended.join(
+    " atau "
+  )}. ${info.reason} Anda tetap bisa melanjutkan dengan ${method}, tapi hasilnya mungkin kurang optimal.`;
+}
+
 function recommendLayout(area) {
   const numericArea = Number(area) || 0;
   return numericArea <= 2
     ? {
         layout: "Bertingkat (rak vertikal)",
-        note: "Luas lahanmu tergolong kecil, jadi rak bertingkat (2-3 tingkat) akan memanfaatkan ruang vertikal dengan lebih baik.",
+        note: "Luas lahan Anda tergolong kecil, jadi rak bertingkat/multi-level (2-3 tingkat) lebih memanfaatkan ruang vertikal.",
       }
     : {
         layout: "Datar (satu tingkat)",
-        note: "Luas lahanmu cukup luas untuk tata letak datar satu tingkat, yang lebih mudah dipasang dan dirawat.",
+        note: "Luas lahan Anda cukup lega untuk tata letak datar satu tingkat, yang lebih simpel dipasang dan dirawat.",
       };
 }
 
-// Returns the list of materials/preparation info to show the user in the
-// second step of the planting form, based on the method, land area, and
-// plant chosen. This replaces the old free-form checklist with concrete
-// guidance the user can act on.
 export function getMaterialsInfo(method, area, plantName) {
   const count = estimatePlantCount(method, area);
   const numericArea = Number(area) || 0;
@@ -51,21 +66,21 @@ export function getMaterialsInfo(method, area, plantName) {
   if (method === "NFT") {
     const { layout, note } = recommendLayout(numericArea);
     const pipeDiameter = recommendPipeDiameter(plantName);
-    const pipeCount = Math.max(Math.ceil(count / 15), 1); // ~15 planting holes per 3 m pipe
+    const pipeCount = Math.max(Math.ceil(count / 15), 1); // ~15 lubang tanam per pipa 3 m
 
     return {
       title: "Bahan yang perlu disiapkan (sistem NFT)",
-      summary: `Untuk ${numericArea || "-"} m² ${plantName || "tanamanmu"} menggunakan NFT, kamu memerlukan sekitar ${count} slot tanam.`,
+      summary: `Untuk lahan ${numericArea || "-"} m² tanaman ${plantName || "Anda"} dengan metode NFT, Anda butuh sekitar ${count} lubang tanam.`,
       layout,
       layoutNote: note,
       items: [
-        `Pipa PVC (paralon), diameter ${pipeDiameter}, sekitar ${pipeCount} batang pipa panjang 3 m`,
+        `Pipa PVC ("paralon") diameter ${pipeDiameter}, sekitar ${pipeCount} batang (panjang 3 m)`,
         `Net pot, sekitar ${count} buah (satu per lubang tanam)`,
         "Pompa air + timer, untuk mengalirkan larutan nutrisi secara terus-menerus",
-        "Tandon/wadah nutrisi",
+        "Tandon/wadah larutan nutrisi",
         "Rockwool atau media tanam untuk bibit",
         "Larutan nutrisi A & B, pH meter, dan TDS/EC meter",
-        `Rak/penyangga ${layout} untuk menahan pipa dengan sedikit kemiringan`,
+        `Rak/dudukan model ${layout.toLowerCase()} untuk menahan pipa dengan sedikit kemiringan`,
       ],
     };
   }
@@ -75,17 +90,17 @@ export function getMaterialsInfo(method, area, plantName) {
 
   return {
     title: "Bahan yang perlu disiapkan (Wick System)",
-    summary: `Untuk ${numericArea || "-"} m² ${plantName || "tanamanmu"} menggunakan Wick System, kamu memerlukan sekitar ${count} slot tanam.`,
+    summary: `Untuk lahan ${numericArea || "-"} m² tanaman ${plantName || "Anda"} dengan metode Wick System, Anda butuh sekitar ${count} lubang tanam.`,
     layout: recommendLayout(numericArea).layout,
     layoutNote: recommendLayout(numericArea).note,
     items: [
       `Net pot, sekitar ${count} buah`,
       "Sumbu (kain flanel atau tali katun), satu per net pot",
-      `Wadah nutrisi, dengan kapasitas total sekitar ${reservoirLiters} liter`,
+      `Wadah/tandon nutrisi, kapasitas total sekitar ${reservoirLiters} liter`,
       "Rockwool atau media tanam untuk bibit",
       "Larutan nutrisi A & B, pH meter, dan TDS/EC meter",
       "Nampan semai untuk perkecambahan",
-      `Nampan/penyangga ${recommendLayout(numericArea).layout} untuk menahan net pot`,
+      `Rak/dudukan model ${recommendLayout(numericArea).layout.toLowerCase()} untuk menahan net pot`,
     ],
   };
 }
